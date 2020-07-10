@@ -1,1 +1,5 @@
 *.txt
+*.npz
+*.mat
+*.nii
+*.gz

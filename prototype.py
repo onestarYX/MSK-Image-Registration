@@ -49,12 +49,19 @@ tgt = keras.Input([*vol_size, 1])
 concat_input = layers.concatenate([src, tgt])
 print(concat_input.shape)
 
-conv_layer_1 = layers.Conv3D(filters=1, kernel_size=(3, 3, 3), input_shape=[*vol_size, 2], activation='relu')(concat_input)
-conv_layer_2 = layers.Conv3D(filters=1, kernel_size=(5, 5, 5), activation="relu")(conv_layer_1)
-conv_layer_3 = layers.Conv3D(filters=1, kernel_size=(20, 20, 20), activation="relu")(conv_layer_2)
-dense_layer_1 = layers.Flatten()(conv_layer_3)
-dense_layer_2 = layers.Dense(58982400, activation="relu")(dense_layer_1)
-# reshaped_output = layers.Reshape((*vol_size, 3))(dense_layer_2)
+conv_layer_1 = layers.Conv3D(filters=2, kernel_size=(3, 3, 3), input_shape=[*vol_size, 2], activation='relu')(concat_input)
+conv_layer_2 = layers.Conv3D(filters=2, kernel_size=(5, 5, 5), activation="relu")(conv_layer_1)
+conv_layer_3 = layers.Conv3D(filters=2, kernel_size=(20, 20, 20), activation="relu")(conv_layer_2)
+# dense_layer_1 = layers.Flatten()(conv_layer_3)
+# dense_layer_2 = layers.Dense(vol_size[0] * vol_size[1] * vol_size[2] * 3, activation="relu")(dense_layer_1)              # OOM Error here
+conv_layer_4 = layers.Conv3D(filters=10, kernel_size=(40, 40, 78), activation="relu")(conv_layer_3)
+print(conv_layer_4.shape)
+flow = layers.Reshape((*vol_size, 3))(conv_layer_4)
+
+# model = keras.Model(inputs=concat_input, outputs=reshaped_output)                                                         # Error: Graph disconnected
+model = keras.Model(inputs=[src, tgt], outputs=flow)
+
+
 
 # random_flow_list = []
 # for i in range(vol_size[0] * vol_size[1] * vol_size[2] * 3):
