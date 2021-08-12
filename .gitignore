@@ -8,3 +8,9 @@ MRNet/MRNet-v1.0
 MRNet/.ipynb_checkpoints
 checkpoints/*
 *.zip
+
+.DS_Store
+.idea
+.ipynb_checkpoints
+test_data/
+__pycache__/
