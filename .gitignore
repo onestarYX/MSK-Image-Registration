@@ -10,5 +10,3 @@ checkpoints/*
 model_cp/
 __pycache__/
 .idea/
-*.xml
-*.iml
