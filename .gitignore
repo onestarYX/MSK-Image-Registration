@@ -3,9 +3,12 @@
 *.mat
 *.nii
 *.gz
-MRNet/MRNet-forVoxelMorph/*
 MRNet/MRNet-v1.0
-MRNet/.ipynb_checkpoints
 checkpoints/*
 *.zip
 .ipynb_checkpoints
+model_cp/
+__pycache__/
+.idea/
+*.xml
+*.iml
