@@ -22,20 +22,24 @@ def vxm_data_generator(data_path, max_slice, x_size, y_size, filelist, batch_siz
         fixed_img_list = []
         for fixed_img_path in fixed_img_paths:
             fixed_img = np.load(os.path.join(data_path, fixed_img_path))
-            fixed_img = zoom(fixed_img, (2, 1, 1))
+            # fixed_img = zoom(fixed_img, (2, 1, 1))
             num_slice_to_pad = max_slice - fixed_img.shape[0]
             left_padding = num_slice_to_pad // 2
             right_padding = num_slice_to_pad - left_padding
+            # print("fixed left_padding: {}".format(left_padding))
+            # print("fixed right_padding: {}".format(right_padding))
             fixed_img = np.pad(fixed_img, ((left_padding, right_padding), (0, 0), (0, 0)), 'constant')
             fixed_img_list.append(fixed_img)
 
         moving_img_list = []
         for moving_img_path in moving_img_paths:
             moving_img = np.load(os.path.join(data_path, moving_img_path))
-            moving_img = zoom(moving_img, (2, 1, 1))
+            # moving_img = zoom(moving_img, (2, 1, 1))
             num_slice_to_pad = max_slice - moving_img.shape[0]
             left_padding = num_slice_to_pad // 2
             right_padding = num_slice_to_pad - left_padding
+            # print("moving left_padding: {}".format(left_padding))
+            # print("moving right_padding: {}".format(right_padding))
             moving_img = np.pad(moving_img, ((left_padding, right_padding), (0, 0), (0, 0)), 'constant')
             moving_img_list.append(moving_img)
 
@@ -68,11 +72,12 @@ if __name__ == "__main__":
     print(tf.test.is_built_with_cuda())
     print(tf.config.list_physical_devices('GPU'))
 
-    data_path = "../MRNet/MRNet-v1.0/train/axial"
+    data_path = "../MRNet/MRNet-v1.0/train/axial_inv"
     filelist = os.listdir(data_path)
-    filelist.remove('.DS_Store')
+    if '.DS_Store' in filelist:
+        filelist.remove('.DS_Store')
 
-    max_slice = 128
+    max_slice = 64
     slice_x = 256
     slice_y = 256
 
