@@ -6,7 +6,8 @@ import neurite as ne
 import random
 from scipy.ndimage.interpolation import zoom
 
-def vxm_data_generator(data_path, max_slice, x_size, y_size, filelist, batch_size=1):
+def vxm_data_generator(data_path, max_slice, x_size, y_size, filelist, batch_size=1, normalize=False, shuffle=True,
+                       start_idx=0):
     """
     Generator that yields data for
     our custom vxm model. Note that we need to provide numpy data for each
@@ -15,9 +16,17 @@ def vxm_data_generator(data_path, max_slice, x_size, y_size, filelist, batch_siz
     inputs:  moving [bs, H, W, 1], fixed image [bs, H, W, 1]
     outputs: moved image [bs, H, W, 1], zero-gradient [bs, H, W, 2]
     """
+    i = start_idx
     while True:
-        fixed_img_paths = random.choices(filelist, k=batch_size)
-        moving_img_paths = random.choices(filelist, k=batch_size)
+        if shuffle:
+            fixed_img_paths = random.choices(filelist, k=batch_size)
+            moving_img_paths = random.choices(filelist, k=batch_size)
+        else:
+            if i + batch_size * 2 > len(filelist) - 1:
+                i = 0
+            fixed_img_paths = filelist[i : i + batch_size]
+            moving_img_paths = filelist[i + batch_size : i + batch_size * 2]
+            i += batch_size * 2
 
         fixed_img_list = []
         for fixed_img_path in fixed_img_paths:
@@ -43,9 +52,13 @@ def vxm_data_generator(data_path, max_slice, x_size, y_size, filelist, batch_siz
             moving_img = np.pad(moving_img, ((left_padding, right_padding), (0, 0), (0, 0)), 'constant')
             moving_img_list.append(moving_img)
 
-        fixed_images = np.array(fixed_img_list) / 255.0
+        fixed_images = np.array(fixed_img_list)
+        if normalize:
+            fixed_images = fixed_images / 255.0
         fixed_images = np.expand_dims(fixed_images, -1)
-        moving_images = np.array(moving_img_list) / 255.0
+        moving_images = np.array(moving_img_list)
+        if normalize:
+            moving_images = moving_images / 255.0
         moving_images = np.expand_dims(moving_images, -1)
 
         vol_shape = (max_slice, x_size, y_size)

@@ -10,3 +10,6 @@ checkpoints/*
 model_cp/
 __pycache__/
 .idea/
+knee_segmentation
+model_cp
+model_cp_inv
