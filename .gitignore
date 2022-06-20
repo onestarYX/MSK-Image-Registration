@@ -13,3 +13,4 @@ __pycache__/
 knee_segmentation
 model_cp
 model_cp_inv
+data
