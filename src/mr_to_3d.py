@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 if __name__ == "__main__":
-    data_path = "../MRNet/MRNet-v1.0/train/axial"
+    data_path = "../data/MRNet/MRNet-v1.0/train/axial"
     filelist = os.listdir(data_path)
     if '.DS_Store' in filelist:
         filelist.remove('.DS_Store')
@@ -21,12 +21,16 @@ if __name__ == "__main__":
     points[:, 2] /= points[:, 2].max()
     print(points.shape)
 
-    point_colors = np.ones_like(points)
-    point_colors *= img[img_mask][:, np.newaxis]
+    # downsample option 2: after intensity thresholding
+    points = points[::100]
+    print(points.shape)
+
+    #point_colors = np.ones_like(points)
+    #point_colors *= img[img_mask][:, np.newaxis]
 
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(points)
-    pcd.colors = o3d.utility.Vector3dVector(point_colors)
+    #pcd.colors = o3d.utility.Vector3dVector(point_colors)
 
     vis = o3d.visualization.Visualizer()
     vis.create_window()
