@@ -5,6 +5,9 @@ import voxelmorph as vxm
 import random
 import dataset
 
+
+
+
 if __name__ == "__main__":
     print(tf.test.is_built_with_cuda())
 
